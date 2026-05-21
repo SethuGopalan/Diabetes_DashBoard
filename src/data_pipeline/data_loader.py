@@ -51,6 +51,7 @@ def load_data(file_path):
     # create Spark session
     spark = SparkSession.builder \
         .appName("data_loader") \
+        .config("spark.jars.packages", "org.postgresql:postgresql:42.7.3") \
         .getOrCreate()
 
     # load CSV file into Spark dataframe
