@@ -16,7 +16,7 @@ app = FastAPI()
 def root_endpoint():
 
     # Return JSON response back to browser/client
-    return {"status": "API running"}git 
+    return {"status": "API running"}
 
 
   
