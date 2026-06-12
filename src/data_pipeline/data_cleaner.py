@@ -17,7 +17,7 @@ from data_loader import load_data
 
 # Import pandas for median calculations
 import pandas as pd
-
+from pyspark.sql.functions import monotonically_increasing_id
 def clean_data():
 
 
@@ -141,5 +141,5 @@ def clean_data():
     # Show cleaned dataframe
     
     # clean_df.show()
-        
+    clean_df = clean_df.withColumn("id",monotonically_increasing_id())   
     return clean_df 

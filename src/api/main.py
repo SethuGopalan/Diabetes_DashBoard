@@ -4,6 +4,9 @@ from src.data_pipeline.data_loader import log_json
 
 # Import uvicorn server for running the FastAPI application
 import uvicorn
+from src.database.db_connection import get_db
+from src.database.db_connection import SessionLocal
+from models.diabetes_model import Diabetespatients
 
 # Create FastAPI application object
 app = FastAPI()
@@ -22,15 +25,15 @@ def root_endpoint():
 @app.get("/summary")
 
 def summary_status():
-    log_json("Summery acees started ...",level="INFO")
-     # Load connection credentials from the local .env configuration file
-    load_dotenv()
-    # Connect to PostgreSQL
-    db_host = os.getenv("DB_HOST")
-    db_port = os.getenv("DB_PORT")
-    db_name = os.getenv("DB_NAME")
-    db_user = os.getenv("DB_USER")
-    db_password = os.getenv("DB_PASSWORD")
+
+    db = SessionLocal()
+
+    total_patients=db.query(Diabetespatients).count()
+      
+    db.close()
+    return {"total_patients":total_patients}
+   
+    
 
 
 

@@ -9,7 +9,7 @@ import os
 
 # import SparkSession from PySpark
 from pyspark.sql import SparkSession
-
+import terrafox_datalake as dl
 
 # configure logger settings
 # INFO = normal pipeline messages
@@ -53,13 +53,15 @@ def load_data(file_path):
         .appName("data_loader") \
         .config("spark.jars.packages", "org.postgresql:postgresql:42.7.3") \
         .getOrCreate()
-
+   
     # load CSV file into Spark dataframe
     raw_data = spark.read.csv(
         file_path,
         header=True,
         inferSchema=True
+
     )
+    
 
     # return Spark dataframe
     return raw_data

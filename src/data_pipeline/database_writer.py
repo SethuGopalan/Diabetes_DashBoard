@@ -3,6 +3,7 @@ from data_loader import log_json
 import psycopg2
 from dotenv import load_dotenv
 import os
+from pyspark.sql.functions import monotonically_increasing_id
 def write_to_database():
     """
     Fetches cleaned data from the pipeline and loads it into a PostgreSQL database.
@@ -31,6 +32,15 @@ def write_to_database():
 
         #  Get clean data
         clean_df = clean_data()
+        # after clean_df = clean_data()
+        print(clean_df.columns)
+
+        # before write
+        clean_df.printSchema()
+
+        # after write success
+        print("WRITE COMPLETED")
+        
 
         # Step 2: Build the structural PostgreSQL JDBC connection string
         jdbc_url = f"jdbc:postgresql://{db_host}:{db_port}/{db_name}"
@@ -58,6 +68,7 @@ def write_to_database():
     except Exception as e:
         # Catch any structural or network failures and route them to the error logs
         log_json(f"Database write failed: {str(e)}", level="ERROR")
+        raise e
 # Safeguard block: ensures this script only runs when executed directly,
 # preventing it from executing unexpectedly if imported by other scripts.
 if __name__ == "__main__":
