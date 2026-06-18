@@ -13,7 +13,7 @@
     justify-content: center;
     height: 95px;
     background-color: #111111;
-    color: yellow;
+    color: rgb(102, 255, 0);
     overflow: hidden;
     padding: 20px;
 }
@@ -221,4 +221,76 @@
 .prediction-section > * {
     position: relative;
     z-index: 1;
+}
+.check-data-btn {
+
+    margin-right: 8px;
+    margin-bottom: 8px;
+
+    padding: 4px 10px;
+
+    font-size: 13px;
+
+    border-radius: 6px;
+}
+
+
+.check-data-btn:hover {
+
+    transform: translateY(-2px);
+
+    transition: 0.2s;
+}
+
+
+.check-data-btn.active-tool {
+
+    background-color: #28a745 !important;
+
+    border-color: #28a745 !important;
+}
+#head-modal .modal-dialog {
+    position: absolute;
+    top: 180px;
+    left: 50px;
+    margin: 0;
+    width: 300px;
+}
+.dash-table-container {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.dash-table-container .dash-header {
+    background-color: #198754;
+    color: white;
+    font-weight: bold;
+}
+
+.dash-table-container td {
+    color: #198754;
+    font-weight: bold;
+}
+
+.shadow-card {
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.25);
+    border-radius: 10px;
+}
+
+.table-card {
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.dash-table-container .dash-header {
+    background-color: #198754 !important;
+    color: white !important;
+    font-weight: bold !important;
+    text-align: center !important;
+}
+
+.dash-table-container td {
+    color: #198754 !important;
+    font-weight: bold !important;
+    background-color: #f8f9fa !important;
 }

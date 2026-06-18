@@ -10,6 +10,7 @@ import os
 from sqlalchemy.orm import sessionmaker 
 # Load all variables from .env into memory
 from sqlalchemy.orm import declarative_base
+import psycopg2
 
 load_dotenv()
 
@@ -52,6 +53,16 @@ def get_db():
 
         db.close()
 
-        
+# Direct PostgreSQL connection
+def get_db_connection():
+    conn = psycopg2.connect(
+        host=db_host,
+        port=db_port,
+        database=db_name,
+        user=db_user,
+        password=db_password
+    )
+
+    return conn        
 
 

@@ -14,10 +14,10 @@ from pyspark.sql.functions import when
 
 # Import custom data loading function
 from data_loader import load_data
-
 # Import pandas for median calculations
 import pandas as pd
-from pyspark.sql.functions import monotonically_increasing_id
+from pyspark.sql.functions import monotonically_increasing_id,round
+
 def clean_data():
 
 
@@ -132,6 +132,15 @@ def clean_data():
 
         # Print remaining zero count after cleaning
         # print(f"after clean {invalid}: {zeros_incol}")
+    # =========================================================
+    # ROUND DECIMAL COLUMNS
+    # =========================================================
+
+    # Round dpf to 3 decimal places to avoid long floating values
+        clean_df = clean_df.withColumn(
+            "dpf",
+            round(clean_df["dpf"], 3)
+    )
 
 
     # =========================================================

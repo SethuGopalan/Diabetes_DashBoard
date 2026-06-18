@@ -1,44 +1,23 @@
-from sqlalchemy import Column,Integer,Float,BigInteger
-# Import ORM base creator
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer, Float, BigInteger
+from src.database.db_connection import Base
 
-# Create ORM base class
-Base = declarative_base()
 
-class Diabetespatients(Base):
+class DiabetesPatient(Base):
+    """
+    ORM model for diabetes_clean table.
+    Each class variable maps to one database column.
+    """
 
-    __tablename__ ="diabetes_clean"
-
-    # Map this ORM class to PostgreSQL table
     __tablename__ = "diabetes_clean"
-
-    # Primary key for ORM
 
     id = Column(BigInteger, primary_key=True)
 
-    # Integer SQL column
     pregnancies = Column(Integer)
-
-    # Float SQL column
     glucose = Column(Float)
-
-    # Float SQL column
     diastolic = Column(Float)
-
-    # Float SQL column
     triceps = Column(Float)
-
-    # Float SQL column
     insulin = Column(Float)
-
-    # Float SQL column
     bmi = Column(Float)
-
-    # Float SQL column
     dpf = Column(Float)
-
-    # Integer SQL column
     age = Column(Integer)
-
-    # Integer SQL column
     diabetes = Column(Integer)

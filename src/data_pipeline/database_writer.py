@@ -1,4 +1,5 @@
 from data_cleaner import clean_data
+
 from data_loader import log_json
 import psycopg2
 from dotenv import load_dotenv

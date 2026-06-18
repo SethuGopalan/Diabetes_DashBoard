@@ -6,10 +6,11 @@ from src.data_pipeline.data_loader import log_json
 import uvicorn
 from src.database.db_connection import get_db
 from src.database.db_connection import SessionLocal
-from models.diabetes_model import Diabetespatients
-
+from models.diabetes_model import DiabetesPatient
+from src.api.info import router as info_router
 # Create FastAPI application object
 app = FastAPI()
+app.include_router(info_router)
 
 # Create GET endpoint for root URL "/"
 # When user visits localhost:8000/
@@ -28,7 +29,7 @@ def summary_status():
 
     db = SessionLocal()
 
-    total_patients=db.query(Diabetespatients).count()
+    total_patients=db.query(DiabetesPatient).count()
       
     db.close()
     return {"total_patients":total_patients}
