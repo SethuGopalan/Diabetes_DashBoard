@@ -1,4 +1,4 @@
-#!/workspaces/Diabetes_DashBoard/.dvenv/bin/python
+#!/home/coder/projects/Diabetes_DashBoard/.dvenv/bin/python3
 
 import sys
 import json

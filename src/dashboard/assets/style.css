@@ -129,7 +129,7 @@
 .statistics-section {
     min-height: 75vh;
 
-    background-image: url("/assets/images/Stat-image.png");
+    background-image: url("images/Stat-image.png");
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -160,7 +160,7 @@
 .visualization-section {
     min-height: 75vh;
 
-    background-image: url("/assets/images/viual-1-imgae.png");
+    background-image: url("images/viual-1-imgae.png");
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -193,7 +193,7 @@
 .prediction-section {
     min-height: 75vh;
 
-    background-image: url("/assets/images/predict-image.png");
+    background-image: url("images/predict-image.png");
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
