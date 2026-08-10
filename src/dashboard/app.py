@@ -82,7 +82,7 @@ app.layout = dbc.Container(
         # ====================================================
 
         dbc.Row(
-            className="main-row",
+            className="main-row g-0",
             children=[
 
                 # ============================================
@@ -94,7 +94,7 @@ app.layout = dbc.Container(
 
                 dbc.Col(
                     width=4,
-                    className="statistics-section",
+                    className="statistics-section p-0",
                     children=[
 
                         # Section title
@@ -106,23 +106,23 @@ app.layout = dbc.Container(
                         # Explain what the dataset contains.
                         # ------------------------------------
 
-                        html.H4("What type of data is this?"),
+                        html.H4("Dataset Overview"),
                         html.P(
                             "This dataset contains medical records related to diabetes. "
                             "It includes glucose, blood pressure, BMI, insulin, skin thickness, "
                             "age, pregnancy history, and diabetes outcome values."
                         ),
 
-                        html.H4("How many records are there?"),
+                        html.H4("Total Records"),
                         html.P(
                             "There are 768 patient records in this dataset. "
                             "Each record represents one patient observation."
                         ),
 
-                        html.H4("What are the features of the data?"),
+                        html.H4("Dataset Features"),
                         html.P(
-                            "The features describe patient health indicators that can be used "
-                            "to explore diabetes risk and prepare predictive analysis."
+                            "The dataset features include patient health indicators such as glucose, blood pressure, BMI, insulin,"
+                            " skin thickness, age, pregnancy history, and diabetes outcome values."
                         ),
 
                         # ------------------------------------
@@ -223,6 +223,25 @@ app.layout = dbc.Container(
 
                         html.Br(),
 
+                        
+                    ]
+                ),
+
+                # ============================================
+                # VISUALIZATION SECTION
+                # Purpose:
+                # Placeholder for future charts and graphs.
+                # ============================================
+
+                dbc.Col(
+                    width=4,
+                    className="visualization-section p-0",
+                    children=[
+                        html.H2("Analysis & Visualization"),
+                        html.P(
+                            "This section will allow users to select chart types "
+                            "and explore numeric relationships in the data."
+                        ),
                         # ------------------------------------
                         # ANALYSIS SECTION
                         # Purpose:
@@ -250,26 +269,16 @@ app.layout = dbc.Container(
                             placeholder="Select analysis type",
                             className="analysis-dropdown"
                         ),
-                    ]
+                        html.Div(
+                            id="analysis-output",
+                            children=[
+                                html.P("Select an analysis type to view results.")
+                            ]
+                        )
+                                            ] 
+
                 ),
 
-                # ============================================
-                # VISUALIZATION SECTION
-                # Purpose:
-                # Placeholder for future charts and graphs.
-                # ============================================
-
-                dbc.Col(
-                    width=4,
-                    className="visualization-section",
-                    children=[
-                        html.H2("Visualization"),
-                        html.P(
-                            "This section will allow users to select chart types "
-                            "and explore numeric relationships in the data."
-                        ),
-                    ]
-                ),
 
                 # ============================================
                 # PREDICTION SECTION
@@ -279,7 +288,7 @@ app.layout = dbc.Container(
 
                 dbc.Col(
                     width=4,
-                    className="prediction-section",
+                    className="prediction-section p-0",
                     children=[
                         html.H2("Prediction"),
                         html.P(
@@ -289,37 +298,26 @@ app.layout = dbc.Container(
                     ]
                 ),
             ]
+            
         ),
-
-        # ====================================================
-        # BOTTOM DESCRIPTION ROW
+         # ====================================================
+        # FOOTER
         # Purpose:
-        # Give short helper descriptions for dashboard areas.
+        # Display dashboard information at the bottom.
         # ====================================================
 
-        dbc.Row(
-            className="description-row",
+        html.Footer(
+            className="dashboard-footer",
             children=[
-                dbc.Col(
-                    width=6,
-                    className="statistics-help-section",
-                    children=[
-                        html.H5("Here you can select tools to generate descriptive statistics about the data.")
-                    ]
+                html.P("Diabetic Prediction Dashboard"),
+                html.P(
+                    "Data Analysis • Visualization • Machine Learning Prediction"
                 ),
-
-                dbc.Col(
-                    width=6,
-                    className="visualization-help-section",
-                    children=[
-                        html.H5("Here you can select numeric variables and visualization types.")
-                    ]
-                ),
+                html.P("© 2026 Terrafox AI")
             ]
         ),
-    ]
-)
-
+    ])
+       
 
 # ============================================================
 # HEAD MODAL CALLBACK
@@ -508,8 +506,22 @@ def run_check_data(
             ]),
             className="table-card"
         )
-
-
+# ============================================================
+# ANALYSIS DROPDOWN CALLBACK
+# Purpose:
+# Detect which analysis option was selected,
+# call the FastAPI analysis endpoint,
+# and return the selected analysis output.
+# ============================================================
+@app.callback(
+Output("analysis-output","children"),
+Input("analysis-dropdown","value"),
+prevent_initial_call=True
+)
+def run_analysis(selected_analysis):
+    if selected_analysis is None:
+        return ""
+    return html.P(f"selected analysis:{selected_analysis}")
 # ============================================================
 # APP RUNNER
 # Purpose:

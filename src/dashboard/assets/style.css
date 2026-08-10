@@ -1,54 +1,117 @@
+/* =========================================================
+   DASHBOARD MAIN CONTAINER
+   Purpose:
+   Controls the full dashboard page size and base background.
+   ========================================================= */
+
 .dashboard-container {
     width: 100%;
     min-height: 100vh;
     padding: 0;
     margin: 0;
-    background-color: #f4f7fb;
+    background-color: #1a1a1a;
 }
 
-/* HEADER */
+
+/* =========================================================
+   DASHBOARD HEADER
+   Purpose:
+   Creates the black top header containing:
+   - Left ECG animation
+   - Dashboard title
+   - Right ECG animation
+   ========================================================= */
+
 .dashboard-header {
     display: flex;
     align-items: center;
     justify-content: center;
+
     height: 95px;
-    background-color: #111111;
-    color: rgb(102, 255, 0);
+
+    background-color: #0a0a0ad7;
+    color: rgb(245, 245, 248);
+
     overflow: hidden;
     padding: 20px;
 }
 
+
+/* =========================================================
+   DASHBOARD TITLE
+   Purpose:
+   Styles "Diabetic Prediction Dashboard"
+   in the center of the header.
+   ========================================================= */
+
 .dashboard-title {
     margin: 0 35px;
+
+    /* Prevent title from wrapping into multiple lines */
     white-space: nowrap;
+
     font-family: "Bradley Hand ITC", cursive;
     font-size: 36px;
     font-weight: bold;
+
     z-index: 2;
 }
+
+
+/* =========================================================
+   ECG HEADER AREAS
+   Purpose:
+   Creates space on both sides of the title
+   for the animated ECG line.
+   ========================================================= */
+
 .ecg-left,
 .ecg-right {
     flex: 1;
+
     height: 55px;
+
     overflow: hidden;
     position: relative;
 }
 
+
+/* =========================================================
+   ECG LINE DESIGN
+   Purpose:
+   Creates the red ECG line using an inline SVG.
+   The same line is used on both sides of the title.
+   ========================================================= */
+
 .ecg-left::before,
 .ecg-right::before {
     content: "";
+
     position: absolute;
     top: 0;
+
     width: 200%;
     height: 55px;
 
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='0,40 80,40 100,40 115,15 130,65 145,40 210,40 230,40 245,25 260,55 275,40 360,40 380,40 395,10 410,70 425,40 600,40' fill='none' stroke='%23ff0000' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='0,40 80,40 100,40 115,15 130,65 145,40 210,40 230,40 245,25 260,55 275,40 360,40 380,40 395,10 410,70 425,40 600,40' fill='none' stroke='%23e34b42' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
     background-repeat: repeat-x;
     background-size: 600px 55px;
 
-    filter: drop-shadow(0 0 6px #ff8800);
+    /* Give ECG line a small glow */
+    /* filter: drop-shadow(0 0 6px #b14a1a); */
+    filter: drop-shadow(0 0 5px rgba(227, 75, 66, 0.65));
+
+    /* Continuously move ECG line */
     animation: ecgSlide 3s linear infinite;
 }
+
+
+/* =========================================================
+   ECG LEFT / RIGHT POSITION
+   Purpose:
+   Controls which side each ECG animation starts from.
+   ========================================================= */
 
 .ecg-left::before {
     right: 0;
@@ -57,6 +120,14 @@
 .ecg-right::before {
     left: 0;
 }
+
+
+/* =========================================================
+   ECG ANIMATION
+   Purpose:
+   Moves the ECG SVG horizontally to create
+   the continuous heartbeat animation.
+   ========================================================= */
 
 @keyframes ecgSlide {
     from {
@@ -69,143 +140,258 @@
 }
 
 
+/* =========================================================
+   MAIN DASHBOARD SECTIONS - SHARED STYLE
+   Purpose:
+   Applies common layout styling to:
+   - Statistics
+   - Analysis & Visualization
+   - Prediction
+
+   The left/right padding keeps text away from
+   the edges of each background image.
+   ========================================================= */
+
 .statistics-section,
 .visualization-section,
 .prediction-section {
     min-height: 75vh;
-    background-color: white;
-    padding: 25px;
-    color: #222222;
+
+    /* Space between content and section boundaries */
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+    padding-top: 20px;
+    padding-bottom: 30px;
+
+    box-sizing: border-box;
+
+    /* Default text color */
+    color: #E8EEEB;
+
     font-family: "Calibri Light", Calibri, sans-serif;
-    border: 1px solid #d9e2ec;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    
+
+    position: relative;
+    overflow: hidden;
+
+    /* Improve readability over detailed images */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+
+    /* Keep the three sections visually connected */
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
 }
+
+
+/* =========================================================
+   MAIN SECTION TITLES
+   Purpose:
+   Styles:
+   - Statistics
+   - Analysis & Visualization
+   - Prediction
+
+   Gold is used to match the gold elements
+   inside the dashboard background images.
+   ========================================================= */
 
 .statistics-section h2,
 .visualization-section h2,
 .prediction-section h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+
     text-align: center;
+
     font-size: 30px;
     font-weight: 600;
-    margin-bottom: 25px;
-    
+
+    color: #F6D36B;
 }
 
-.statistics-section h4 {
+
+/* =========================================================
+   SECTION SUBHEADINGS
+   Purpose:
+   Styles smaller headings such as:
+   - Dataset Overview
+   - Total Records
+   - Dataset Features
+   - Analysis
+
+   Emerald/teal matches the dashboard image theme.
+   ========================================================= */
+
+.statistics-section h4,
+.visualization-section h4,
+.prediction-section h4 {
+    margin-top: 22px;
+
     font-size: 19px;
     font-weight: 600;
-    margin-top: 22px;
+
+    color: #79E0BE;
 }
+
+
+/* =========================================================
+   SECTION PARAGRAPH TEXT
+   Purpose:
+   Styles normal explanatory text inside all
+   three dashboard sections.
+   ========================================================= */
 
 .statistics-section p,
 .visualization-section p,
 .prediction-section p {
-    font-size: 15px;
-    line-height: 1.6;
+    margin-bottom: 14px;
+
+    font-size: 18px;
+    line-height: 1.5;
+
     text-align: left;
+
+    /* Soft off-white instead of harsh pure white */
+    color: #E8EEEB;
 }
 
-/* DESCRIPTION / HELP ROW */
-.description-row {
-    padding: 0 20px 30px 20px;
-}
 
-.statistics-help-section,
-.visualization-help-section {
-    background-color: #ffffff;
-    padding: 18px;
-    border-radius: 10px;
-    border: 1px solid #d9e2ec;
-    font-family: "Calibri Light", Calibri, sans-serif;
-}
+/* =========================================================
+   REMOVE BOOTSTRAP SIDE GAPS
+   Purpose:
+   Removes Bootstrap container padding so the
+   dashboard sections can touch the browser edges.
+   ========================================================= */
 
-/* REMOVE BOOTSTRAP SIDE GAP */
 .container-fluid {
     padding-left: 0;
     padding-right: 0;
 }
-.statistics-section {
-    min-height: 75vh;
 
-    background-image: url("images/Stat-image.png");
+
+/* =========================================================
+   STATISTICS SECTION BACKGROUND
+   Purpose:
+   Displays the Statistics background image.
+   ========================================================= */
+
+.statistics-section {
+    background-image: url("images/Stat-image2.png");
+
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
 
     position: relative;
     overflow: hidden;
-
-    padding: 25px;
-
-    border: 1px solid #d9e2ec;
-    border-radius: 12px;
 }
+
+
+/* =========================================================
+   STATISTICS DARK OVERLAY
+   Purpose:
+   Places a transparent black layer over the image
+   so text remains readable.
+   ========================================================= */
 
 .statistics-section::before {
     content: "";
+
     position: absolute;
     inset: 0;
-    background: rgba(255, 255, 255, 0.45);
+
+    background: rgba(0, 0, 0, 0.25);
+
     z-index: 0;
 }
 
-.statistics-section > * {
+
+/* =========================================================
+   STATISTICS CONTENT LAYER
+   Purpose:
+   Keeps text, buttons and other components
+   above the dark overlay.
+   ========================================================= */
+
+.statistics-section>* {
     position: relative;
     z-index: 1;
 }
 
 
-.visualization-section {
-    min-height: 75vh;
+/* =========================================================
+   ANALYSIS & VISUALIZATION BACKGROUND
+   Purpose:
+   Displays the Analysis & Visualization image.
+   ========================================================= */
 
-    background-image: url("images/viual-1-imgae.png");
+.visualization-section {
+    background-image: url("images/visual-analy6.png");
+
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
 
     position: relative;
     overflow: hidden;
-
-    padding: 25px;
-
-    border: 1px solid #d9e2ec;
-    border-radius: 12px;
 }
+
+
+/* =========================================================
+   ANALYSIS & VISUALIZATION DARK OVERLAY
+   Purpose:
+   Improves text readability over the image.
+   ========================================================= */
 
 .visualization-section::before {
     content: "";
+
     position: absolute;
     inset: 0;
 
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(0, 0, 0, 0.25);
 
     z-index: 0;
 }
 
-.visualization-section > * {
+
+/* =========================================================
+   ANALYSIS CONTENT LAYER
+   Purpose:
+   Keeps Analysis controls and text above
+   the dark image overlay.
+   ========================================================= */
+
+.visualization-section>* {
     position: relative;
     z-index: 1;
 }
 
 
-.prediction-section {
-    min-height: 75vh;
+/* =========================================================
+   PREDICTION SECTION BACKGROUND
+   Purpose:
+   Displays the Prediction background image.
+   ========================================================= */
 
-    background-image: url("images/predict-image.png");
+.prediction-section {
+    background-image: url("images/prediction5.png");
+
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
 
     position: relative;
     overflow: hidden;
-
-    padding: 25px;
-
-    border: 1px solid #d9e2ec;
-    border-radius: 12px;
 }
+
+
+/* =========================================================
+   PREDICTION DARK OVERLAY
+   Purpose:
+   Adds contrast between prediction content
+   and the background image.
+   ========================================================= */
 
 .prediction-section::before {
     content: "";
@@ -213,84 +399,207 @@
     position: absolute;
     inset: 0;
 
-    background: rgba(0, 20, 35, 0.45);
+    background: rgba(0, 0, 0, 0.25);
 
     z-index: 0;
 }
 
-.prediction-section > * {
+
+/* =========================================================
+   PREDICTION CONTENT LAYER
+   Purpose:
+   Keeps prediction inputs/results above
+   the background overlay.
+   ========================================================= */
+
+.prediction-section>* {
     position: relative;
     z-index: 1;
 }
-.check-data-btn {
 
+
+/* =========================================================
+   STATISTICS TOOL BUTTONS
+   Purpose:
+   Styles buttons such as:
+   - Columns
+   - Info
+   - Data Types
+   - Head
+   - Tail
+   - Clear
+   ========================================================= */
+
+.check-data-btn {
     margin-right: 8px;
     margin-bottom: 8px;
 
     padding: 4px 10px;
 
     font-size: 13px;
-
-    border-radius: 6px;
 }
 
 
-.check-data-btn:hover {
+/* =========================================================
+   STATISTICS BUTTON HOVER EFFECT
+   Purpose:
+   Slightly lifts a button when the mouse
+   moves over it.
+   ========================================================= */
 
+.check-data-btn:hover {
     transform: translateY(-2px);
 
     transition: 0.2s;
 }
 
 
+/* =========================================================
+   ACTIVE STATISTICS BUTTON
+   Purpose:
+   Shows which Statistics tool is currently active.
+   ========================================================= */
+
 .check-data-btn.active-tool {
-
-    background-color: #28a745 !important;
-
-    border-color: #28a745 !important;
+    background-color: #e44d12 !important;
+    border-color: #f63b16 !important;
 }
+
+
+/* =========================================================
+   HEAD DATA MODAL POSITION
+   Purpose:
+   Controls the location and width of the small
+   popup used for displaying Head data.
+   ========================================================= */
+
 #head-modal .modal-dialog {
     position: absolute;
+
     top: 180px;
     left: 50px;
+
     margin: 0;
+
     width: 300px;
 }
+
+
+/* =========================================================
+   DASH DATA TABLE CONTAINER
+   Purpose:
+   Gives returned Statistics tables rounded edges
+   and prevents table content from overflowing them.
+   ========================================================= */
+
 .dash-table-container {
     border-radius: 10px;
     overflow: hidden;
 }
 
-.dash-table-container .dash-header {
-    background-color: #198754;
-    color: white;
-    font-weight: bold;
-}
 
-.dash-table-container td {
-    color: #198754;
-    font-weight: bold;
-}
-
-.shadow-card {
-    box-shadow: 0px 4px 15px rgba(0,0,0,0.25);
-    border-radius: 10px;
-}
-
-.table-card {
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-}
+/* =========================================================
+   DASH TABLE HEADER
+   Purpose:
+   Styles table column names.
+   ========================================================= */
 
 .dash-table-container .dash-header {
-    background-color: #198754 !important;
+    background-color: #e0511d !important;
+
     color: white !important;
+
     font-weight: bold !important;
     text-align: center !important;
 }
 
+
+/* =========================================================
+   DASH TABLE DATA CELLS
+   Purpose:
+   Styles numeric/data values shown inside tables.
+   ========================================================= */
+
 .dash-table-container td {
-    color: #198754 !important;
+    color: #eef9f4b1 !important;
+
     font-weight: bold !important;
+
     background-color: #f8f9fa !important;
+}
+
+
+/* =========================================================
+   SHADOW CARD
+   Purpose:
+   Gives popup/content cards elevation so they
+   appear above the dashboard background.
+   ========================================================= */
+
+.shadow-card {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   TABLE CARD
+   Purpose:
+   Creates a slightly stronger elevated card
+   around returned table results.
+   ========================================================= */
+
+.table-card {
+    border-radius: 12px;
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================================================
+   DASHBOARD FOOTER
+   Purpose:
+   Creates the footer underneath the three
+   dashboard sections.
+
+   Uses footer1.png as the background image.
+   ========================================================= */
+
+.dashboard-footer {
+    width: 100%;
+    min-height: 130px;
+
+    background-image: url("images/footer1.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+    text-align: center;
+
+    margin: 0;
+    padding: 15px;
+
+    /* Small gold separator between dashboard and footer */
+    border-top: 1px solid #9b7a22;
+}
+
+
+/* =========================================================
+   FOOTER TEXT
+   Purpose:
+   Controls spacing between the three footer
+   text lines.
+   ========================================================= */
+
+.dashboard-footer p {
+    margin: 3px 0;
 }
