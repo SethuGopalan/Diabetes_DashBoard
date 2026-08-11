@@ -1,67 +1,94 @@
-# import Python logging module
-import logging
+# ============================================================
+# IMPORTS
+# Purpose:
+# Import logging, JSON tools, PySpark,
+# and the Terrafox Data Lake reader.
+# ============================================================
 
-# import JSON module for structured log messages
+import logging
 import json
 
-# import os module for future environment/path handling
-import os
-
-# import SparkSession from PySpark
 from pyspark.sql import SparkSession
-import terrafox_datalake as dl
 
-# configure logger settings
-# INFO = normal pipeline messages
-# format = how logs appear in terminal
+from src.data_pipeline.datalake_reader import load_csv_from_datalake
+
+
+# ============================================================
+# LOGGING CONFIGURATION
+# Purpose:
+# Configure normal pipeline logging.
+# ============================================================
+
 logging.basicConfig(
     level=logging.INFO,
-    format='%(message)s'
+    format="%(message)s"
 )
 
 
-# custom logger function
+# ============================================================
+# JSON LOGGER
+# Purpose:
+# Create structured JSON log messages.
+# ============================================================
+
 def log_json(message, level="ERROR"):
 
-    # create JSON formatted log message
     entry = json.dumps({
         "status": level,
         "msg": message
     })
 
-    # if error log
     if level == "ERROR":
-
-        # print error log
         logging.error(entry)
 
-    # otherwise normal info log
     else:
-
-        # print info log
         logging.info(entry)
 
 
-# data loader function
-def load_data(file_path):
+# ============================================================
+# DATA LOADER
+# Purpose:
+# Create the Spark session and load raw data
+# from the Terrafox Data Lake into PySpark.
+# ============================================================
 
-    # log pipeline started
-    log_json("log pipeline started", level="INFO")
+def load_data():
 
-    # create Spark session
-    spark = SparkSession.builder \
-        .appName("data_loader") \
-        .config("spark.jars.packages", "org.postgresql:postgresql:42.7.3") \
-        .getOrCreate()
-   
-    # load CSV file into Spark dataframe
-    raw_data = spark.read.csv(
-        file_path,
-        header=True,
-        inferSchema=True
-
+    # Log pipeline start
+    log_json(
+        "Data loading pipeline started",
+        level="INFO"
     )
-    
 
-    # return Spark dataframe
+
+    # ========================================================
+    # CREATE SPARK SESSION
+    # Purpose:
+    # Create the PySpark environment used by
+    # the data cleaning pipeline.
+    # ========================================================
+
+    spark = (
+        SparkSession.builder
+        .appName("data_loader")
+        .config(
+            "spark.jars.packages",
+            "org.postgresql:postgresql:42.7.3,"
+            "org.apache.hadoop:hadoop-aws:3.4.2"
+        )
+        .getOrCreate()
+    )
+
+
+    # ========================================================
+    # LOAD RAW DATA FROM DATA LAKE
+    # Purpose:
+    # datalake_reader.py connects to MinIO and
+    # returns Diabetes.csv as a Spark DataFrame.
+    # ========================================================
+
+    raw_data = load_csv_from_datalake(spark)
+
+
+    # Return Spark DataFrame to data_cleaner.py
     return raw_data

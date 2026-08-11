@@ -13,7 +13,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import when
 
 # Import custom data loading function
-from data_loader import load_data
+from src.data_pipeline.data_loader import load_data
 # Import pandas for median calculations
 import pandas as pd
 from pyspark.sql.functions import monotonically_increasing_id,round
@@ -26,8 +26,8 @@ def clean_data():
     # =========================================================
 
     # Load diabetes CSV dataset
-    raw_data = load_data("Data/raw/Diabetes.csv")
-
+    # raw_data = load_data("Data/raw/Diabetes.csv")
+    raw_data = load_data()
 
     # =========================================================
     # REMOVE DUPLICATES

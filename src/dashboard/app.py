@@ -5,7 +5,7 @@
 # and table components needed for the dashboard.
 # ============================================================
 
-from dash import Dash, html, dcc, Input, Output, State, callback_context, dash_table
+from dash import Dash, html, dcc, Input, Output, State,ctx, callback_context, dash_table,no_update
 import dash_bootstrap_components as dbc
 import requests
 
@@ -148,63 +148,81 @@ app.layout = dbc.Container(
                             dbc.Button("Tail", id="btn-tail", color="success", className="check-data-btn"),
                             dbc.Button("Clear", id="btn-clear", color="danger", className="check-data-btn"),
                         ]),
+                        # ------------------------------------
+# HEAD ROW SELECTOR
+# Purpose:
+# Ask user how many first rows to show.
+# Appears inside the Statistics section
+# instead of opening as a Bootstrap modal.
+# ------------------------------------
+
+html.Div(
+    id="head-row-selector",
+    style={"display": "none"},
+    children=[
+        dbc.Card(
+            children=[
+
+                html.P(
+                    "How many head rows do you want to show?"
+                ),
+
+                dcc.Input(
+                    id="head-row-input",
+                    type="number",
+                    value=5,
+                    min=1,
+                    max=20
+                ),
+
+                dbc.Button(
+                    "Show",
+                    id="btn-show-head",
+                    color="success"
+                )
+            ],
+            className="row-selector-card"
+        )
+    ]
+),
+
 
                         # ------------------------------------
-                        # HEAD ROW MODAL
-                        # Purpose:
-                        # Ask user how many first rows to show.
-                        # ------------------------------------
-
-                        dbc.Modal(
-                            [
-                                dbc.ModalHeader("Select Head Rows"),
-                                dbc.ModalBody([
-                                    html.P("How many head rows do you want to show?"),
-                                    dcc.Input(
-                                        id="head-row-input",
-                                        type="number",
-                                        value=5,
-                                        min=1,
-                                        max=20
-                                    )
-                                ]),
-                                dbc.ModalFooter(
-                                    dbc.Button("Show", id="btn-show-head", color="success")
-                                )
-                            ],
-                            id="head-modal",
-                            is_open=False,
-                            size="sm",
-                            centered=False,
-                        ),
-
-                        # ------------------------------------
-                        # TAIL ROW MODAL
+                        # TAIL ROW SELECTOR
                         # Purpose:
                         # Ask user how many last rows to show.
+                        # Appears inside the Statistics section
+                        # instead of opening as a Bootstrap modal.
                         # ------------------------------------
 
-                        dbc.Modal(
-                            [
-                                dbc.ModalHeader("Select Tail Rows"),
-                                dbc.ModalBody([
-                                    html.P("How many tail rows do you want to show?"),
-                                    dcc.Input(
-                                        id="tail-row-input",
-                                        type="number",
-                                        value=5,
-                                        min=1,
-                                        max=20
-                                    )
-                                ]),
-                                dbc.ModalFooter(
-                                    dbc.Button("Show", id="btn-show-tail", color="success")
+                        html.Div(
+                            id="tail-row-selector",
+                            style={"display": "none"},
+                            children=[
+                                dbc.Card(
+                                    children=[
+
+                                        html.P(
+                                            "How many tail rows do you want to show?"
+                                        ),
+
+                                        dcc.Input(
+                                            id="tail-row-input",
+                                            type="number",
+                                            value=5,
+                                            min=1,
+                                            max=20
+                                        ),
+
+                                        dbc.Button(
+                                            "Show",
+                                            id="btn-show-tail",
+                                            color="success"
+                                        )
+                                    ],
+                                    className="row-selector-card"
                                 )
-                            ],
-                            id="tail-modal",
-                            is_open=False,
-                            size="sm",
-                            centered=False,
+                            ]
                         ),
 
                         html.Br(),
@@ -318,39 +336,79 @@ app.layout = dbc.Container(
         ),
     ])
        
-
-# ============================================================
-# HEAD MODAL CALLBACK
+# =========================================================
+# HEAD / TAIL ROW SELECTOR CALLBACK
 # Purpose:
-# Open and close the Head modal when user clicks Head or Show.
-# ============================================================
+# Shows the small Head or Tail row selector inside
+# the Statistics section.
+#
+# Head button -> show Head selector
+# Tail button -> show Tail selector
+# Show button -> hide selector after selection
+# =========================================================
 
 @app.callback(
-    Output("head-modal", "is_open"),
+    Output("head-row-selector", "style"),
+    Output("tail-row-selector", "style"),
+
     Input("btn-head", "n_clicks"),
-    Input("btn-show-head", "n_clicks"),
-    State("head-modal", "is_open"),
-    prevent_initial_call=True
-)
-def toggle_head_modal(head_clicks, show_head_clicks, is_open):
-    return not is_open
-
-
-# ============================================================
-# TAIL MODAL CALLBACK
-# Purpose:
-# Open and close the Tail modal when user clicks Tail or Show.
-# ============================================================
-
-@app.callback(
-    Output("tail-modal", "is_open"),
     Input("btn-tail", "n_clicks"),
+
+    Input("btn-show-head", "n_clicks"),
     Input("btn-show-tail", "n_clicks"),
-    State("tail-modal", "is_open"),
+
     prevent_initial_call=True
 )
-def toggle_tail_modal(tail_clicks, show_tail_clicks, is_open):
-    return not is_open
+def toggle_row_selectors(
+    head_clicks,
+    tail_clicks,
+    show_head_clicks,
+    show_tail_clicks
+):
+
+    clicked_button = ctx.triggered_id
+
+    # -------------------------------------
+    # HEAD BUTTON
+    # Show Head selector and hide Tail.
+    # -------------------------------------
+    if clicked_button == "btn-head":
+        return (
+            {"display": "block"},
+            {"display": "none"}
+        )
+
+    # -------------------------------------
+    # TAIL BUTTON
+    # Show Tail selector and hide Head.
+    # -------------------------------------
+    elif clicked_button == "btn-tail":
+        return (
+            {"display": "none"},
+            {"display": "block"}
+        )
+
+    # -------------------------------------
+    # HEAD SHOW BUTTON
+    # Hide selector after Head table request.
+    # -------------------------------------
+    elif clicked_button == "btn-show-head":
+        return (
+            {"display": "none"},
+            {"display": "none"}
+        )
+
+    # -------------------------------------
+    # TAIL SHOW BUTTON
+    # Hide selector after Tail table request.
+    # -------------------------------------
+    elif clicked_button == "btn-show-tail":
+        return (
+            {"display": "none"},
+            {"display": "none"}
+        )
+
+    return no_update, no_update
 
 
 # ============================================================
@@ -443,7 +501,9 @@ def run_check_data(
                 for row in selected_rows
             ],
             page_size=head_row_count,
-            style_table={"overflowX": "auto"},
+            style_table={"overflowX": "auto",
+                          "overflowY":"auto",
+                          "maxHeight" :"320px"           },
             style_cell={
                 "minWidth": "100px",
                 "width": "100px",
@@ -482,7 +542,9 @@ def run_check_data(
                 for row in selected_rows
             ],
             page_size=tail_row_count,
-            style_table={"overflowX": "auto"},
+            style_table={"overflowX": "auto",
+                        "overflowY" :"auto" ,   
+                         "maxHeight" :"320px"       },
             style_cell={
                 "minWidth": "100px",
                 "width": "100px",

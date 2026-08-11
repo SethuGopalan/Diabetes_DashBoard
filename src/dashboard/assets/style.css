@@ -10,7 +10,10 @@
     padding: 0;
     margin: 0;
     background-color: #1a1a1a;
+    /* Default font for body text, buttons, cards and controls */
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
 }
+
 
 
 /* =========================================================
@@ -24,10 +27,18 @@
 
 .dashboard-header {
     display: flex;
+
+    /* Never allow header elements to wrap */
+    flex-wrap: nowrap;
+
     align-items: center;
     justify-content: center;
 
+    width: 100%;
     height: 95px;
+
+    /* Include padding inside the 95px height */
+    box-sizing: border-box;
 
     background-color: #0a0a0ad7;
     color: rgb(245, 245, 248);
@@ -45,13 +56,16 @@
    ========================================================= */
 
 .dashboard-title {
+    flex-shrink: 0;
     margin: 0 35px;
 
     /* Prevent title from wrapping into multiple lines */
     white-space: nowrap;
 
-    font-family: "Bradley Hand ITC", cursive;
+
     font-size: 36px;
+    font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+    font-weight: 600;
     font-weight: bold;
 
     z-index: 2;
@@ -68,7 +82,7 @@
 .ecg-left,
 .ecg-right {
     flex: 1;
-
+    min-width: 0;
     height: 55px;
 
     overflow: hidden;
@@ -204,6 +218,8 @@
     text-align: center;
 
     font-size: 30px;
+    /* font-weight: 600; */
+    font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
     font-weight: 600;
 
     color: #F6D36B;
@@ -228,8 +244,9 @@
     margin-top: 22px;
 
     font-size: 19px;
+    /* font-weight: 600; */
+    font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
     font-weight: 600;
-
     color: #79E0BE;
 }
 
@@ -250,6 +267,8 @@
     line-height: 1.5;
 
     text-align: left;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-weight: 400;
 
     /* Soft off-white instead of harsh pure white */
     color: #E8EEEB;
@@ -466,7 +485,7 @@
 }
 
 
-/* =========================================================
+/* /* =========================================================
    HEAD DATA MODAL POSITION
    Purpose:
    Controls the location and width of the small
@@ -484,7 +503,7 @@
     width: 300px;
 }
 
-
+*/
 /* =========================================================
    DASH DATA TABLE CONTAINER
    Purpose:
@@ -521,7 +540,7 @@
    ========================================================= */
 
 .dash-table-container td {
-    color: #eef9f4b1 !important;
+    color: #145c4a !important;
 
     font-weight: bold !important;
 
@@ -551,9 +570,77 @@
    ========================================================= */
 
 .table-card {
+    /* border-radius: 12px;
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25); */
+    background: rgba(5, 18, 14, 0.94);
+
+    border: 1px solid rgba(246, 211, 107, 0.55);
     border-radius: 12px;
 
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.55);
+
+    padding: 12px;
+}
+
+/* =========================================================
+   TABLE CARD TEXT
+   Purpose:
+   Makes text above the table readable
+   on the dark popup background.
+   ========================================================= */
+
+.table-card p {
+    color: #E8EEEB;
+
+    margin-bottom: 10px;
+}
+
+/* =========================================================
+   HEAD / TAIL ROW SELECTOR CARD
+   Purpose:
+   Creates a small inline row selector inside
+   the Statistics section.
+   ========================================================= */
+
+.row-selector-card {
+    width: 280px;
+
+    margin-top: 12px;
+    margin-bottom: 12px;
+
+    padding: 12px;
+
+    background: rgba(5, 18, 14, 0.96);
+
+    border: 1px solid rgba(246, 211, 107, 0.55);
+    border-radius: 10px;
+
+    color: #E8EEEB;
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+/* =========================================================
+   ROW SELECTOR NUMBER INPUT
+   Purpose:
+   Makes the selected row number clearly visible.
+   ========================================================= */
+
+.row-selector-card input {
+    color: #145c4a !important;
+    background-color: #ffffff !important;
+
+    font-weight: 600;
+    text-align: center;
+
+    opacity: 1 !important;
+}
+
+
+/* Space between number input and Show button */
+.row-selector-card input {
+    margin-right: 10px;
 }
 
 

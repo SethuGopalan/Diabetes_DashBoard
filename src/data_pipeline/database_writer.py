@@ -1,6 +1,8 @@
-from data_cleaner import clean_data
+# from data_cleaner import clean_data
 
-from data_loader import log_json
+# from data_loader import log_json
+from src.data_pipeline.data_cleaner import clean_data
+from src.data_pipeline.data_loader import log_json
 import psycopg2
 from dotenv import load_dotenv
 import os
@@ -39,9 +41,7 @@ def write_to_database():
         # before write
         clean_df.printSchema()
 
-        # after write success
-        print("WRITE COMPLETED")
-        
+       
 
         # Step 2: Build the structural PostgreSQL JDBC connection string
         jdbc_url = f"jdbc:postgresql://{db_host}:{db_port}/{db_name}"
@@ -63,8 +63,12 @@ def write_to_database():
             mode="overwrite",
             properties=connection_properties
         )
+        # after write success
+        print("WRITE COMPLETED")
+        
         # Confirm successful pipeline completion
-        log_json("Table 'diabetes_clean' successfully created and populated!", level="INFO")
+        log_json("Table 'diabetes_clean' successfully created and populated!",level="INFO"
+        )
                 
     except Exception as e:
         # Catch any structural or network failures and route them to the error logs
