@@ -642,7 +642,166 @@
 .row-selector-card input {
     margin-right: 10px;
 }
+/* Space between number input and Show button */
+.row-selector-card input {
+    margin-right: 10px;
+}
 
+
+/* =========================================
+   ANALYSIS DROPDOWN
+   Purpose:
+   Keep dropdown white and make the
+   selected analysis clearly visible.
+   ========================================= */
+
+/* Dropdown background */
+#analysis-dropdown .Select-control,
+#analysis-dropdown [class*="control"] {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+}
+
+/* Selected value - older Dash dropdown */
+#analysis-dropdown .Select-value,
+#analysis-dropdown .Select-value-label {
+    color: #111111 !important;
+    opacity: 1 !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+}
+
+/* Selected value - newer Dash dropdown */
+#analysis-dropdown [class*="singleValue"] {
+    color: #111111 !important;
+    opacity: 1 !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+}
+
+/* Force text inside selected area */
+#analysis-dropdown .Select-control span,
+#analysis-dropdown [class*="control"] span {
+    color: #111111 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+}
+
+/* Placeholder */
+#analysis-dropdown .Select-placeholder,
+#analysis-dropdown [class*="placeholder"] {
+    color: #666666 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+}
+
+/* Input text */
+#analysis-dropdown input {
+    color: #111111 !important;
+}
+
+/* Clear X and arrow */
+#analysis-dropdown .Select-clear,
+#analysis-dropdown .Select-arrow {
+    color: #333333 !important;
+}
+#analysis-dropdown * {
+    color: #111111 !important;
+}
+
+/* =========================================
+   AGE ANALYSIS RESULT CARD
+   Purpose:
+   Compact dark analysis result cards.
+   ========================================= */
+
+.age-analysis-card {
+    background: rgba(5, 18, 17, 0.94);
+    border: 1px solid rgba(246, 211, 107, 0.45);
+    border-radius: 7px;
+    margin-bottom: 5px;
+    color: #f4f7f6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+
+/* Compact card spacing */
+
+.age-analysis-body {
+    padding: 7px 10px;
+}
+
+
+/* Analysis title */
+
+.age-analysis-title {
+    color: #F6D36B;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+
+/* Column headings */
+
+.age-analysis-header {
+    color: #79E0BE;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+
+/* Analysis values */
+
+.age-analysis-row {
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 500;
+}
+/* =========================================================
+   COMBINED RISK INFORMATION CARD
+   Purpose:
+   Explains the meaning of the combined risk score.
+   ========================================================= */
+
+.combined-risk-info-card {
+    background: rgba(5, 18, 17, 0.96) !important;
+    border: 1px solid rgba(246, 211, 107, 0.45);
+    border-radius: 7px;
+    margin-bottom: 5px;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Make the card compact */
+.combined-risk-info-card .card-body {
+    padding: 8px 10px;
+}
+
+/* Combined Risk Score title */
+.combined-risk-info-card h5 {
+    color: #F6D36B !important;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    text-shadow: none;
+}
+
+/* Explanation text */
+.combined-risk-info-card p {
+    color: #E8EEEB !important;
+    font-size: 11px;
+    line-height: 1.25;
+    margin: 2px 0;
+    text-shadow: none;
+}
+
+/* Highlight risk-factor definition */
+.combined-risk-info-card p:first-of-type {
+    color: #79E0BE !important;
+    font-weight: 600;
+}
 
 /* =========================================================
    DASHBOARD FOOTER

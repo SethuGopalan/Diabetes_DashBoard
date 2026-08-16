@@ -5,10 +5,20 @@
 # and table components needed for the dashboard.
 # ============================================================
 
-from dash import Dash, html, dcc, Input, Output, State,ctx, callback_context, dash_table,no_update
+from dash import (
+    Dash,
+    html,
+    dcc,
+    Input,
+    Output,
+    State,
+    ctx,
+    callback_context,
+    dash_table,
+    no_update,
+)
 import dash_bootstrap_components as dbc
 import requests
-
 
 # ============================================================
 # DASH APP CONFIGURATION
@@ -21,7 +31,7 @@ import requests
 app = Dash(
     __name__,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
-    requests_pathname_prefix="/@sethugopalan/diabetes-dashboard.main/apps/code-server/proxy/8050/"
+    requests_pathname_prefix="/@sethugopalan/diabetes-dashboard.main/apps/code-server/proxy/8050/",
 )
 
 
@@ -33,6 +43,8 @@ app = Dash(
 # ============================================================
 
 API_URL = "http://127.0.0.1:9000/info"
+
+ANALYSIS_API_URL = "http://127.0.0.1:9000/analysis"
 
 
 # ============================================================
@@ -49,144 +61,155 @@ app.layout = dbc.Container(
     fluid=True,
     className="dashboard-container",
     children=[
-
         # ====================================================
         # HEADER SECTION
         # Purpose:
         # Display the dashboard title with ECG design elements.
         # ====================================================
-
-        dbc.Row([
-            dbc.Col(
-                width=12,
-                children=[
-                    html.Div(
-                        className="dashboard-header",
-                        children=[
-                            html.Div(className="ecg-left"),
-                            html.H1(
-                                "Diabetic Prediction Dashboard",
-                                className="dashboard-title"
-                            ),
-                            html.Div(className="ecg-right"),
-                        ]
-                    )
-                ]
-            )
-        ]),
-
+        dbc.Row(
+            [
+                dbc.Col(
+                    width=12,
+                    children=[
+                        html.Div(
+                            className="dashboard-header",
+                            children=[
+                                html.Div(className="ecg-left"),
+                                html.H1(
+                                    "Diabetic Prediction Dashboard",
+                                    className="dashboard-title",
+                                ),
+                                html.Div(className="ecg-right"),
+                            ],
+                        )
+                    ],
+                )
+            ]
+        ),
         # ====================================================
         # MAIN CONTENT ROW
         # Purpose:
         # Hold the three dashboard sections side by side.
         # ====================================================
-
         dbc.Row(
             className="main-row g-0",
             children=[
-
                 # ============================================
                 # STATISTICS SECTION
                 # Purpose:
                 # Explain the dataset, allow dataset exploration,
                 # and prepare space for analysis tools.
                 # ============================================
-
                 dbc.Col(
                     width=4,
                     className="statistics-section p-0",
                     children=[
-
                         # Section title
                         html.H2("Statistics"),
-
                         # ------------------------------------
                         # DATASET OVERVIEW
                         # Purpose:
                         # Explain what the dataset contains.
                         # ------------------------------------
-
                         html.H4("Dataset Overview"),
                         html.P(
                             "This dataset contains medical records related to diabetes. "
                             "It includes glucose, blood pressure, BMI, insulin, skin thickness, "
                             "age, pregnancy history, and diabetes outcome values."
                         ),
-
                         html.H4("Total Records"),
                         html.P(
                             "There are 768 patient records in this dataset. "
                             "Each record represents one patient observation."
                         ),
-
                         html.H4("Dataset Features"),
                         html.P(
                             "The dataset features include patient health indicators such as glucose, blood pressure, BMI, insulin,"
                             " skin thickness, age, pregnancy history, and diabetes outcome values."
                         ),
-
                         # ------------------------------------
                         # DATASET EXPLORATION SECTION
                         # Purpose:
                         # Help users inspect the dataset before
                         # performing deeper analysis.
                         # ------------------------------------
-
                         html.H5("Dataset Exploration"),
-
                         html.P(
                             "Explore and understand the dataset before performing analysis.",
-                            className="exploration-text"
+                            className="exploration-text",
                         ),
-
                         # Dataset exploration buttons
-                        html.Div([
-                            dbc.Button("Columns", id="btn-columns", color="success", className="check-data-btn"),
-                            dbc.Button("Info", id="btn-info", color="success", className="check-data-btn"),
-                            dbc.Button("Data Types", id="btn-dtypes", color="success", className="check-data-btn"),
-                            dbc.Button("Head", id="btn-head", color="success", className="check-data-btn"),
-                            dbc.Button("Tail", id="btn-tail", color="success", className="check-data-btn"),
-                            dbc.Button("Clear", id="btn-clear", color="danger", className="check-data-btn"),
-                        ]),
+                        html.Div(
+                            [
+                                dbc.Button(
+                                    "Columns",
+                                    id="btn-columns",
+                                    color="success",
+                                    className="check-data-btn",
+                                ),
+                                dbc.Button(
+                                    "Info",
+                                    id="btn-info",
+                                    color="success",
+                                    className="check-data-btn",
+                                ),
+                                dbc.Button(
+                                    "Data Types",
+                                    id="btn-dtypes",
+                                    color="success",
+                                    className="check-data-btn",
+                                ),
+                                dbc.Button(
+                                    "Head",
+                                    id="btn-head",
+                                    color="success",
+                                    className="check-data-btn",
+                                ),
+                                dbc.Button(
+                                    "Tail",
+                                    id="btn-tail",
+                                    color="success",
+                                    className="check-data-btn",
+                                ),
+                                dbc.Button(
+                                    "Clear",
+                                    id="btn-clear",
+                                    color="danger",
+                                    className="check-data-btn",
+                                ),
+                            ]
+                        ),
                         # ------------------------------------
-# HEAD ROW SELECTOR
-# Purpose:
-# Ask user how many first rows to show.
-# Appears inside the Statistics section
-# instead of opening as a Bootstrap modal.
-# ------------------------------------
-
-html.Div(
-    id="head-row-selector",
-    style={"display": "none"},
-    children=[
-        dbc.Card(
-            children=[
-
-                html.P(
-                    "How many head rows do you want to show?"
-                ),
-
-                dcc.Input(
-                    id="head-row-input",
-                    type="number",
-                    value=5,
-                    min=1,
-                    max=20
-                ),
-
-                dbc.Button(
-                    "Show",
-                    id="btn-show-head",
-                    color="success"
-                )
-            ],
-            className="row-selector-card"
-        )
-    ]
-),
-
-
+                        # HEAD ROW SELECTOR
+                        # Purpose:
+                        # Ask user how many first rows to show.
+                        # Appears inside the Statistics section
+                        # instead of opening as a Bootstrap modal.
+                        # ------------------------------------
+                        html.Div(
+                            id="head-row-selector",
+                            style={"display": "none"},
+                            children=[
+                                dbc.Card(
+                                    children=[
+                                        html.P(
+                                            "How many head rows do you want to show?"
+                                        ),
+                                        dcc.Input(
+                                            id="head-row-input",
+                                            type="number",
+                                            value=5,
+                                            min=1,
+                                            max=20,
+                                        ),
+                                        dbc.Button(
+                                            "Show", id="btn-show-head", color="success"
+                                        ),
+                                    ],
+                                    className="row-selector-card",
+                                )
+                            ],
+                        ),
                         # ------------------------------------
                         # TAIL ROW SELECTOR
                         # Purpose:
@@ -194,63 +217,46 @@ html.Div(
                         # Appears inside the Statistics section
                         # instead of opening as a Bootstrap modal.
                         # ------------------------------------
-
                         html.Div(
                             id="tail-row-selector",
                             style={"display": "none"},
                             children=[
                                 dbc.Card(
                                     children=[
-
                                         html.P(
                                             "How many tail rows do you want to show?"
                                         ),
-
                                         dcc.Input(
                                             id="tail-row-input",
                                             type="number",
                                             value=5,
                                             min=1,
-                                            max=20
+                                            max=20,
                                         ),
-
                                         dbc.Button(
-                                            "Show",
-                                            id="btn-show-tail",
-                                            color="success"
-                                        )
+                                            "Show", id="btn-show-tail", color="success"
+                                        ),
                                     ],
-                                    className="row-selector-card"
+                                    className="row-selector-card",
                                 )
-                            ]
+                            ],
                         ),
-
                         html.Br(),
-
                         # ------------------------------------
                         # DATASET OUTPUT AREA
                         # Purpose:
                         # Show columns, info, data types,
                         # head table, or tail table.
                         # ------------------------------------
-
-                        html.Div(
-                            id="check-data-output",
-                            children=[]
-                        ),
-
+                        html.Div(id="check-data-output", children=[]),
                         html.Br(),
-
-                        
-                    ]
+                    ],
                 ),
-
                 # ============================================
                 # VISUALIZATION SECTION
                 # Purpose:
                 # Placeholder for future charts and graphs.
                 # ============================================
-
                 dbc.Col(
                     width=4,
                     className="visualization-section p-0",
@@ -266,44 +272,41 @@ html.Div(
                         # Let users choose a diabetes risk
                         # analysis type.
                         # ------------------------------------
-
                         html.H4("Analysis", className="analysis-title"),
-
                         html.P(
                             "Perform statistical and risk-based analysis on the selected data.",
-                            className="analysis-text"
+                            className="analysis-text",
                         ),
-
                         # Analysis dropdown selector
                         dcc.Dropdown(
                             id="analysis-dropdown",
                             options=[
                                 {"label": "Age Risk Analysis", "value": "age"},
-                                {"label": "Pregnancy Analysis", "value": "pregnancies"},
+                                {"label": "Pregnancy Analysis", "value": "pregnancy"},
                                 {"label": "BMI / Obesity Analysis", "value": "bmi"},
                                 {"label": "Glucose Analysis", "value": "glucose"},
-                                {"label": "Combined Risk Analysis", "value": "combined"},
+                                {
+                                    "label": "Combined Risk Analysis",
+                                    "value": "combined",
+                                },
                             ],
+                            value="age",
                             placeholder="Select analysis type",
-                            className="analysis-dropdown"
+                            className="analysis-dropdown",
                         ),
                         html.Div(
                             id="analysis-output",
                             children=[
                                 html.P("Select an analysis type to view results.")
-                            ]
-                        )
-                                            ] 
-
+                            ],
+                        ),
+                    ],
                 ),
-
-
                 # ============================================
                 # PREDICTION SECTION
                 # Purpose:
                 # Placeholder for future model prediction form.
                 # ============================================
-
                 dbc.Col(
                     width=4,
                     className="prediction-section p-0",
@@ -313,29 +316,26 @@ html.Div(
                             "This section will allow users to enter patient values "
                             "and view diabetes prediction results."
                         ),
-                    ]
+                    ],
                 ),
-            ]
-            
+            ],
         ),
-         # ====================================================
+        # ====================================================
         # FOOTER
         # Purpose:
         # Display dashboard information at the bottom.
         # ====================================================
-
         html.Footer(
             className="dashboard-footer",
             children=[
                 html.P("Diabetic Prediction Dashboard"),
-                html.P(
-                    "Data Analysis • Visualization • Machine Learning Prediction"
-                ),
-                html.P("© 2026 Terrafox AI")
-            ]
+                html.P("Data Analysis • Visualization • Machine Learning Prediction"),
+                html.P("© 2026 Terrafox AI"),
+            ],
         ),
-    ])
-       
+    ],
+)
+
 # =========================================================
 # HEAD / TAIL ROW SELECTOR CALLBACK
 # Purpose:
@@ -347,24 +347,17 @@ html.Div(
 # Show button -> hide selector after selection
 # =========================================================
 
+
 @app.callback(
     Output("head-row-selector", "style"),
     Output("tail-row-selector", "style"),
-
     Input("btn-head", "n_clicks"),
     Input("btn-tail", "n_clicks"),
-
     Input("btn-show-head", "n_clicks"),
     Input("btn-show-tail", "n_clicks"),
-
-    prevent_initial_call=True
+    prevent_initial_call=True,
 )
-def toggle_row_selectors(
-    head_clicks,
-    tail_clicks,
-    show_head_clicks,
-    show_tail_clicks
-):
+def toggle_row_selectors(head_clicks, tail_clicks, show_head_clicks, show_tail_clicks):
 
     clicked_button = ctx.triggered_id
 
@@ -373,40 +366,28 @@ def toggle_row_selectors(
     # Show Head selector and hide Tail.
     # -------------------------------------
     if clicked_button == "btn-head":
-        return (
-            {"display": "block"},
-            {"display": "none"}
-        )
+        return ({"display": "block"}, {"display": "none"})
 
     # -------------------------------------
     # TAIL BUTTON
     # Show Tail selector and hide Head.
     # -------------------------------------
     elif clicked_button == "btn-tail":
-        return (
-            {"display": "none"},
-            {"display": "block"}
-        )
+        return ({"display": "none"}, {"display": "block"})
 
     # -------------------------------------
     # HEAD SHOW BUTTON
     # Hide selector after Head table request.
     # -------------------------------------
     elif clicked_button == "btn-show-head":
-        return (
-            {"display": "none"},
-            {"display": "none"}
-        )
+        return ({"display": "none"}, {"display": "none"})
 
     # -------------------------------------
     # TAIL SHOW BUTTON
     # Hide selector after Tail table request.
     # -------------------------------------
     elif clicked_button == "btn-show-tail":
-        return (
-            {"display": "none"},
-            {"display": "none"}
-        )
+        return ({"display": "none"}, {"display": "none"})
 
     return no_update, no_update
 
@@ -418,20 +399,18 @@ def toggle_row_selectors(
 # call the FastAPI endpoint, and return the correct output.
 # ============================================================
 
+
 @app.callback(
     Output("check-data-output", "children"),
-
     Input("btn-columns", "n_clicks"),
     Input("btn-info", "n_clicks"),
     Input("btn-dtypes", "n_clicks"),
     Input("btn-show-head", "n_clicks"),
     Input("btn-show-tail", "n_clicks"),
     Input("btn-clear", "n_clicks"),
-
     State("head-row-input", "value"),
     State("tail-row-input", "value"),
-
-    prevent_initial_call=True
+    # prevent_initial_call=True,
 )
 def run_check_data(
     columns_clicks,
@@ -441,7 +420,7 @@ def run_check_data(
     show_tail_clicks,
     clear_clicks,
     head_row_count,
-    tail_row_count
+    tail_row_count,
 ):
 
     # Call FastAPI backend
@@ -460,7 +439,8 @@ def run_check_data(
         )
 
     # Find which button triggered the callback
-    clicked_button = callback_context.triggered[0]["prop_id"].split(".")[0]
+    # clicked_button = callback_context.triggered[0]["prop_id"].split(".")[0]
+    clicked_button = ctx.triggered_id or "btn-columns"
 
     # Clear output area
     if clicked_button == "btn-clear":
@@ -468,42 +448,36 @@ def run_check_data(
 
     # Show column names
     if clicked_button == "btn-columns":
-        return html.Ul([
-            html.Li(col)
-            for col in data["column_names"]
-        ])
+        return html.Ul([html.Li(col) for col in data["column_names"]])
 
     # Show total rows and total columns
     elif clicked_button == "btn-info":
-        return html.Ul([
-            html.Li(f"Total Rows: {data['total_rows']}"),
-            html.Li(f"Total Columns: {data['total_columns']}")
-        ])
+        return html.Ul(
+            [
+                html.Li(f"Total Rows: {data['total_rows']}"),
+                html.Li(f"Total Columns: {data['total_columns']}"),
+            ]
+        )
 
     # Show column data types
     elif clicked_button == "btn-dtypes":
-        return html.Ul([
-            html.Li(f"{col}: {dtype}")
-            for col, dtype in data["data_types"].items()
-        ])
+        return html.Ul(
+            [html.Li(f"{col}: {dtype}") for col, dtype in data["data_types"].items()]
+        )
 
     # Show first selected number of rows
     elif clicked_button == "btn-show-head":
         selected_rows = data["head_rows"][:head_row_count]
 
         table = dash_table.DataTable(
-            columns=[
-                {"name": col, "id": col}
-                for col in data["column_names"]
-            ],
-            data=[
-                dict(zip(data["column_names"], row))
-                for row in selected_rows
-            ],
+            columns=[{"name": col, "id": col} for col in data["column_names"]],
+            data=[dict(zip(data["column_names"], row)) for row in selected_rows],
             page_size=head_row_count,
-            style_table={"overflowX": "auto",
-                          "overflowY":"auto",
-                          "maxHeight" :"320px"           },
+            style_table={
+                "overflowX": "auto",
+                "overflowY": "auto",
+                "maxHeight": "320px",
+            },
             style_cell={
                 "minWidth": "100px",
                 "width": "100px",
@@ -513,19 +487,21 @@ def run_check_data(
             css=[
                 {
                     "selector": ".dash-spreadsheet-container",
-                    "rule": "border-radius: 10px; overflow: hidden;"
+                    "rule": "border-radius: 10px; overflow: hidden;",
                 }
-            ]
+            ],
         )
 
         return dbc.Card(
-            dbc.CardBody([
-                html.P(
-                    f"Showing first {head_row_count} rows out of {data['total_rows']} total rows."
-                ),
-                table
-            ]),
-            className="table-card"
+            dbc.CardBody(
+                [
+                    html.P(
+                        f"Showing first {head_row_count} rows out of {data['total_rows']} total rows."
+                    ),
+                    table,
+                ]
+            ),
+            className="table-card",
         )
 
     # Show last selected number of rows
@@ -533,18 +509,14 @@ def run_check_data(
         selected_rows = data["tail_rows"][:tail_row_count]
 
         table = dash_table.DataTable(
-            columns=[
-                {"name": col, "id": col}
-                for col in data["column_names"]
-            ],
-            data=[
-                dict(zip(data["column_names"], row))
-                for row in selected_rows
-            ],
+            columns=[{"name": col, "id": col} for col in data["column_names"]],
+            data=[dict(zip(data["column_names"], row)) for row in selected_rows],
             page_size=tail_row_count,
-            style_table={"overflowX": "auto",
-                        "overflowY" :"auto" ,   
-                         "maxHeight" :"320px"       },
+            style_table={
+                "overflowX": "auto",
+                "overflowY": "auto",
+                "maxHeight": "320px",
+            },
             style_cell={
                 "minWidth": "100px",
                 "width": "100px",
@@ -554,20 +526,24 @@ def run_check_data(
             css=[
                 {
                     "selector": ".dash-spreadsheet-container",
-                    "rule": "border-radius: 10px; overflow: hidden;"
+                    "rule": "border-radius: 10px; overflow: hidden;",
                 }
-            ]
+            ],
         )
 
         return dbc.Card(
-            dbc.CardBody([
-                html.P(
-                    f"Showing last {tail_row_count} rows out of {data['total_rows']} total rows."
-                ),
-                table
-            ]),
-            className="table-card"
+            dbc.CardBody(
+                [
+                    html.P(
+                        f"Showing last {tail_row_count} rows out of {data['total_rows']} total rows."
+                    ),
+                    table,
+                ]
+            ),
+            className="table-card",
         )
+
+
 # ============================================================
 # ANALYSIS DROPDOWN CALLBACK
 # Purpose:
@@ -576,19 +552,222 @@ def run_check_data(
 # and return the selected analysis output.
 # ============================================================
 @app.callback(
-Output("analysis-output","children"),
-Input("analysis-dropdown","value"),
-prevent_initial_call=True
+    Output("analysis-output", "children"),
+    Input("analysis-dropdown", "value"),
+    # prevent_initial_call=True,
 )
 def run_analysis(selected_analysis):
+    cards = []
     if selected_analysis is None:
         return ""
-    return html.P(f"selected analysis:{selected_analysis}")
+    # response = requests.get(ANALYSIS_API_URL, params={"analysis_type": selected_analysis})
+    if selected_analysis == "age":
+        analysis_url = f"{ANALYSIS_API_URL}/{selected_analysis}"
+        response = requests.get(analysis_url)
+        data = response.json()
+        for group in data["data"]:
+            cards.append(
+                dbc.Card(
+                    dbc.CardBody(
+                        [
+                            html.H5(
+                                "Analysis Type: Age", className="age-analysis-title"
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(html.Strong("Age Group")),
+                                    dbc.Col(html.Strong("Total Patients")),
+                                    dbc.Col(html.Strong("Diabetic Patients")),
+                                    dbc.Col(html.Strong("Diabetic Percentage")),
+                                ],
+                                className="age-analysis-header",
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(group["age_group"]),
+                                    dbc.Col(group["total_patients"]),
+                                    dbc.Col(group["diabetic_patients"]),
+                                    dbc.Col(f"{group["diabetes_percentage"]}%"),
+                                ],
+                                className="age-analysis-row",
+                            ),
+                        ],
+                        className="age-analysis-body",
+                    ),
+                    className="age-analysis-card",
+                )
+            )
+    if selected_analysis == "bmi":
+        analysis_url = f"{ANALYSIS_API_URL}/{selected_analysis}"
+        response = requests.get(analysis_url)
+        data = response.json()
+        for group in data["data"]:
+            cards.append(
+                dbc.Card(
+                    dbc.CardBody(
+                        [
+                            html.H5(
+                                "Analysis Type: BMI", className="bmi-analysis-title"
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(html.Strong("BMI Group")),
+                                    dbc.Col(html.Strong("Total Patients")),
+                                    dbc.Col(html.Strong("Diabetic Patients")),
+                                    dbc.Col(html.Strong("Diabetic Percentage")),
+                                ],
+                                className="age-analysis-header",
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(group["bmi_group"]),
+                                    dbc.Col(group["total_patients"]),
+                                    dbc.Col(group["diabetic_patients"]),
+                                    dbc.Col(f"{group["diabetes_percentage"]}%"),
+                                ],
+                                className="age-analysis-row",
+                            ),
+                        ],
+                        className="age-analysis-body",
+                    ),
+                    className="age-analysis-card",
+                )
+            )
+    if selected_analysis == "glucose":
+        analysis_url = f"{ANALYSIS_API_URL}/{selected_analysis}"
+        response = requests.get(analysis_url)
+        data = response.json()
+        for group in data["data"]:
+            cards.append(
+                dbc.Card(
+                    dbc.CardBody(
+                        [
+                            html.H5(
+                                "Analysis Type: Glucose", className="age-analysis-title"
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(html.Strong("Glucose Group")),
+                                    dbc.Col(html.Strong("Total Patients")),
+                                    dbc.Col(html.Strong("Diabetic Patients")),
+                                    dbc.Col(html.Strong("Diabetic Percentage")),
+                                ],
+                                className="age-analysis-header",
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(group["glucose_group"]),
+                                    dbc.Col(group["total_patients"]),
+                                    dbc.Col(group["diabetic_patients"]),
+                                    dbc.Col(f"{group["diabetes_percentage"]}%"),
+                                ],
+                                className="age-analysis-row",
+                            ),
+                        ],
+                        className="age-analysis-body",
+                    ),
+                    className="age-analysis-card",
+                )
+            )
+    if selected_analysis == "pregnancy":
+        analysis_url = f"{ANALYSIS_API_URL}/{selected_analysis}"
+        response = requests.get(analysis_url)
+        data = response.json()
+        for group in data["data"]:
+            cards.append(
+                dbc.Card(
+                    dbc.CardBody(
+                        [
+                            html.H5(
+                                "Analysis Type: Pregnancy",
+                                className="age-analysis-title",
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(html.Strong("Pregnancy Group")),
+                                    dbc.Col(html.Strong("Total Patients")),
+                                    dbc.Col(html.Strong("Diabetic Patients")),
+                                    dbc.Col(html.Strong("Diabetic Percentage")),
+                                ],
+                                className="age-analysis-header",
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(group["pregnancies_group"]),
+                                    dbc.Col(group["total_patients"]),
+                                    dbc.Col(group["diabetic_patients"]),
+                                    dbc.Col(f"{group["diabetes_percentage"]}%"),
+                                ],
+                                className="age-analysis-row",
+                            ),
+                        ],
+                        className="age-analysis-body",
+                    ),
+                    className="age-analysis-card",
+                )
+            )
+    if selected_analysis == "combined":
+        analysis_url = f"{ANALYSIS_API_URL}/{selected_analysis}"
+        response = requests.get(analysis_url)
+        data = response.json()
+
+        # Explanation card - created only once
+        cards.append(
+            dbc.Card(
+                dbc.CardBody(
+                    [
+                        html.H5("Combined Risk Score"),
+                        html.P("Risk Factors: Age ≥ 40 | BMI ≥ 30 | Glucose ≥ 140"),
+                        html.P("0 = No high-risk factors"),
+                        html.P("1 = One high-risk factor"),
+                        html.P("2 = Two high-risk factors"),
+                        html.P("3 = All three high-risk factors"),
+                    ],
+                    className="combined-risk-info-card",
+                )
+            )
+        )
+
+        # Result cards
+        for group in data["data"]:
+            cards.append(
+                dbc.Card(
+                    dbc.CardBody(
+                        [
+                            dbc.Row(
+                                [
+                                    dbc.Col(html.Strong("Risk Count")),
+                                    dbc.Col(html.Strong("Total Patients")),
+                                    dbc.Col(html.Strong("Diabetic Patients")),
+                                    dbc.Col(html.Strong("Diabetic Percentage")),
+                                ],
+                                className="age-analysis-header",
+                            ),
+                            dbc.Row(
+                                [
+                                    dbc.Col(group["risk_count"]),
+                                    dbc.Col(group["total_patients"]),
+                                    dbc.Col(group["diabetic_patients"]),
+                                    dbc.Col(f"{group['diabetes_percentage']}%"),
+                                ],
+                                className="age-analysis-row",
+                            ),
+                        ],
+                        className="age-analysis-body",
+                    ),
+                    className="age-analysis-card",
+                )
+            )
+
+        # return f"Analysis type ={data['analysis_type']},Age Analysis={data['data']}"
+    return cards
+
+
 # ============================================================
 # APP RUNNER
 # Purpose:
 # Start the Dash dashboard server.
-# ============================================================
+# ==========================================_==================
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port=8050)

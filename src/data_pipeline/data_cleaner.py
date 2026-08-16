@@ -14,12 +14,13 @@ from pyspark.sql.functions import when
 
 # Import custom data loading function
 from src.data_pipeline.data_loader import load_data
+
 # Import pandas for median calculations
 import pandas as pd
-from pyspark.sql.functions import monotonically_increasing_id,round
+from pyspark.sql.functions import monotonically_increasing_id, round
+
 
 def clean_data():
-
 
     # =========================================================
     # LOAD RAW DATA
@@ -50,7 +51,6 @@ def clean_data():
     # print("After:", after_count)
     # print("Duplicates Removed:", duplicate_removed)
 
-
     # =========================================================
     # CHECK NULL VALUES
     # =========================================================
@@ -62,9 +62,7 @@ def clean_data():
     for col in clean_df_col:
 
         # Count null values in current column
-        null_count = clean_df.filter(
-            clean_df[col].isNull()
-        ).count()
+        null_count = clean_df.filter(clean_df[col].isNull()).count()
 
         # Print column name and null count
         # print(col, null_count)
@@ -72,83 +70,56 @@ def clean_data():
         # Print separator
         # print("__________________________")
 
-
     # Print section separator
     # print("********************************************************")
-
 
     # =========================================================
     # CHECK INVALID ZERO VALUES
     # =========================================================
 
     # Medical columns where zero is invalid
-    invalid_zeros = [
-        "glucose",
-        "diastolic",
-        "triceps",
-        "insulin",
-        "bmi"
-    ]
-
+    invalid_zeros = ["glucose", "diastolic", "triceps", "insulin", "bmi"]
 
     # Convert selected Spark columns to Pandas dataframe
     # Used only for easy median calculation
-    pandas_df = clean_df.select(
-        invalid_zeros
-    ).toPandas()
-
+    pandas_df = clean_df.select(invalid_zeros).toPandas()
 
     # Loop through each invalid zero column
     for invalid in invalid_zeros:
 
         # Count zero values before cleaning
-        zeros_incol = clean_df.filter(
-            clean_df[invalid] == 0
-        ).count()
+        zeros_incol = clean_df.filter(clean_df[invalid] == 0).count()
 
         # Print zero count before cleaning
         # print(invalid, zeros_incol)
 
         # Calculate median excluding zero values
-        median_value = pandas_df[
-            pandas_df[invalid] != 0
-        ][invalid].median()
+        median_value = pandas_df[pandas_df[invalid] != 0][invalid].median()
 
         # Replace zero values with median value
         clean_df = clean_df.withColumn(
             invalid,
-            when(
-                clean_df[invalid] == 0,
-                median_value
-            ).otherwise(
-                clean_df[invalid]
-            )
+            when(clean_df[invalid] == 0, median_value).otherwise(clean_df[invalid]),
         )
 
         # Count zero values after cleaning
-        zeros_incol = clean_df.filter(
-            clean_df[invalid] == 0
-        ).count()
+        zeros_incol = clean_df.filter(clean_df[invalid] == 0).count()
 
         # Print remaining zero count after cleaning
         # print(f"after clean {invalid}: {zeros_incol}")
-    # =========================================================
-    # ROUND DECIMAL COLUMNS
-    # =========================================================
+        # =========================================================
+        # ROUND DECIMAL COLUMNS
+        # =========================================================
 
-    # Round dpf to 3 decimal places to avoid long floating values
-        clean_df = clean_df.withColumn(
-            "dpf",
-            round(clean_df["dpf"], 3)
-    )
-
+        # Round dpf to 3 decimal places to avoid long floating values
+        clean_df = clean_df.withColumn("dpf", round(clean_df["dpf"], 3))
 
     # =========================================================
     # FINAL CLEAN DATA OUTPUT
     # =========================================================
 
     # Show cleaned dataframe
-    
+
     # clean_df.show()
-    clean_df = clean_df.withColumn("id",monotonically_increasing_id())   
-    return clean_df 
+    clean_df = clean_df.withColumn("id", monotonically_increasing_id())
+    return clean_df

@@ -12,17 +12,13 @@ from pyspark.sql import SparkSession
 
 from src.data_pipeline.datalake_reader import load_csv_from_datalake
 
-
 # ============================================================
 # LOGGING CONFIGURATION
 # Purpose:
 # Configure normal pipeline logging.
 # ============================================================
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 
 # ============================================================
@@ -31,12 +27,10 @@ logging.basicConfig(
 # Create structured JSON log messages.
 # ============================================================
 
+
 def log_json(message, level="ERROR"):
 
-    entry = json.dumps({
-        "status": level,
-        "msg": message
-    })
+    entry = json.dumps({"status": level, "msg": message})
 
     if level == "ERROR":
         logging.error(entry)
@@ -52,14 +46,11 @@ def log_json(message, level="ERROR"):
 # from the Terrafox Data Lake into PySpark.
 # ============================================================
 
+
 def load_data():
 
     # Log pipeline start
-    log_json(
-        "Data loading pipeline started",
-        level="INFO"
-    )
-
+    log_json("Data loading pipeline started", level="INFO")
 
     # ========================================================
     # CREATE SPARK SESSION
@@ -69,16 +60,13 @@ def load_data():
     # ========================================================
 
     spark = (
-        SparkSession.builder
-        .appName("data_loader")
+        SparkSession.builder.appName("data_loader")
         .config(
             "spark.jars.packages",
-            "org.postgresql:postgresql:42.7.3,"
-            "org.apache.hadoop:hadoop-aws:3.4.2"
+            "org.postgresql:postgresql:42.7.3," "org.apache.hadoop:hadoop-aws:3.4.2",
         )
         .getOrCreate()
     )
-
 
     # ========================================================
     # LOAD RAW DATA FROM DATA LAKE
@@ -88,7 +76,6 @@ def load_data():
     # ========================================================
 
     raw_data = load_csv_from_datalake(spark)
-
 
     # Return Spark DataFrame to data_cleaner.py
     return raw_data

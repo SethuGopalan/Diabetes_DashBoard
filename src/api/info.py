@@ -17,7 +17,6 @@ from src.database.db_connection import get_db_connection
 # PostgreSQL Python driver
 import psycopg2
 
-
 # ============================================================
 # API ROUTER
 # Purpose:
@@ -42,6 +41,7 @@ router = APIRouter()
 # - Tail rows
 # ============================================================
 
+
 @router.get("/info")
 def info_endpoint():
 
@@ -51,11 +51,7 @@ def info_endpoint():
     # Record whenever the /info endpoint is called.
     # ========================================================
 
-    log_json(
-        "Info endpoint accessed ...",
-        level="INFO"
-    )
-
+    log_json("Info endpoint accessed ...", level="INFO")
 
     # ========================================================
     # DATABASE CONNECTION
@@ -65,7 +61,6 @@ def info_endpoint():
 
     conn = get_db_connection()
 
-
     # ========================================================
     # DATABASE CURSOR
     # Purpose:
@@ -73,7 +68,6 @@ def info_endpoint():
     # ========================================================
 
     curr = conn.cursor()
-
 
     # ========================================================
     # DATABASE OPERATIONS
@@ -92,16 +86,13 @@ def info_endpoint():
         # Get all column names from diabetes_clean.
         # ====================================================
 
-        curr.execute(
-            """
+        curr.execute("""
             SELECT column_name
             FROM information_schema.columns
             WHERE table_name = 'diabetes_clean';
-            """
-        )
+            """)
 
         column_name = curr.fetchall()
-
 
         # ====================================================
         # COLUMN DATA TYPES
@@ -110,16 +101,13 @@ def info_endpoint():
         # inside diabetes_clean.
         # ====================================================
 
-        curr.execute(
-            """
+        curr.execute("""
             SELECT column_name, data_type
             FROM information_schema.columns
             WHERE table_name = 'diabetes_clean';
-            """
-        )
+            """)
 
         data_type = curr.fetchall()
-
 
         # ====================================================
         # TOTAL ROW COUNT
@@ -128,15 +116,12 @@ def info_endpoint():
         # stored inside diabetes_clean.
         # ====================================================
 
-        curr.execute(
-            """
+        curr.execute("""
             SELECT COUNT(*)
             FROM diabetes_clean;
-            """
-        )
+            """)
 
         total_rows = curr.fetchone()[0]
-
 
         # ====================================================
         # TOTAL COLUMN COUNT
@@ -144,16 +129,13 @@ def info_endpoint():
         # Count how many columns exist in diabetes_clean.
         # ====================================================
 
-        curr.execute(
-            """
+        curr.execute("""
             SELECT COUNT(*)
             FROM information_schema.columns
             WHERE table_name = 'diabetes_clean';
-            """
-        )
+            """)
 
         total_columns = curr.fetchone()[0]
-
 
         # ====================================================
         # HEAD DATA
@@ -162,17 +144,14 @@ def info_endpoint():
         # dashboard Head table.
         # ====================================================
 
-        curr.execute(
-            """
+        curr.execute("""
             SELECT *
             FROM diabetes_clean
             ORDER BY id DESC;
 
-            """
-        )
+            """)
 
         head_rows = curr.fetchall()
-
 
         # ====================================================
         # TAIL DATA
@@ -181,17 +160,14 @@ def info_endpoint():
         # dashboard Tail table.
         # ====================================================
 
-        curr.execute(
-            """
+        curr.execute("""
             SELECT *
             FROM diabetes_clean
             ORDER BY id ASC
 
-            """
-        )
+            """)
 
         tail_rows = curr.fetchall()
-
 
         # ====================================================
         # API RESPONSE
@@ -202,24 +178,12 @@ def info_endpoint():
 
         return {
             "total_rows": total_rows,
-
             "total_columns": total_columns,
-
-            "column_names": [
-                col[0]
-                for col in column_name
-            ],
-
-            "data_types": {
-                col[0]: col[1]
-                for col in data_type
-            },
-
+            "column_names": [col[0] for col in column_name],
+            "data_types": {col[0]: col[1] for col in data_type},
             "head_rows": head_rows,
-
-            "tail_rows": tail_rows
+            "tail_rows": tail_rows,
         }
-
 
     # ========================================================
     # DATABASE CLEANUP

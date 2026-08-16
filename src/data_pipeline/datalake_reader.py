@@ -9,7 +9,6 @@ import os
 from dotenv import load_dotenv
 import terrafox_datalake as dl
 
-
 # ============================================================
 # ENVIRONMENT CONFIGURATION
 # Purpose:
@@ -27,20 +26,14 @@ load_dotenv()
 # Data Lake into a PySpark DataFrame.
 # ============================================================
 
+
 def load_csv_from_datalake(spark):
 
     # Get MinIO bucket from .env
-    bucket = os.getenv(
-        "DATALAKE_BUCKET",
-        "bigdata"
-    )
+    bucket = os.getenv("DATALAKE_BUCKET", "bigdata")
 
     # Get file location inside the bucket
-    key = os.getenv(
-        "DATALAKE_KEY",
-        "Data/Diabetes.csv"
-    )
-
+    key = os.getenv("DATALAKE_KEY", "Data/Diabetes.csv")
 
     # ========================================================
     # CONNECT TO DATA LAKE
@@ -61,39 +54,24 @@ def load_csv_from_datalake(spark):
     hadoop_config = spark.sparkContext._jsc.hadoopConfiguration()
 
     # MinIO credentials
-    hadoop_config.set(
-        "fs.s3a.access.key",
-        os.getenv("MINIO_USER")
-    )
+    hadoop_config.set("fs.s3a.access.key", os.getenv("MINIO_USER"))
 
-    hadoop_config.set(
-        "fs.s3a.secret.key",
-        os.getenv("MINIO_PASSWORD")
-    )
+    hadoop_config.set("fs.s3a.secret.key", os.getenv("MINIO_PASSWORD"))
 
     # Terrafox MinIO endpoint
-    hadoop_config.set(
-        "fs.s3a.endpoint",
-        os.getenv("MINIO_ENDPOINT")
-    )
+    hadoop_config.set("fs.s3a.endpoint", os.getenv("MINIO_ENDPOINT"))
 
     # MinIO/S3-compatible storage should use path-style access
-    hadoop_config.set(
-        "fs.s3a.path.style.access",
-        "true"
-    )
+    hadoop_config.set("fs.s3a.path.style.access", "true")
 
     # Explicitly tell Hadoop to use access-key/secret-key credentials
     hadoop_config.set(
         "fs.s3a.aws.credentials.provider",
-        "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
+        "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider",
     )
 
     # Region used for S3 request signing
-    hadoop_config.set(
-        "fs.s3a.endpoint.region",
-        os.getenv("MINIO_REGION", "us-east-1")
-    )
+    hadoop_config.set("fs.s3a.endpoint.region", os.getenv("MINIO_REGION", "us-east-1"))
 
     # ========================================================
     # LOAD DATA INTO PYSPARK
@@ -103,13 +81,8 @@ def load_csv_from_datalake(spark):
     # ========================================================
 
     raw_data = dl.read_csv_spark(
-        spark=spark,
-        bucket=bucket,
-        key=key,
-        header=True,
-        infer_schema=True
+        spark=spark, bucket=bucket, key=key, header=True, infer_schema=True
     )
-
 
     # Return Spark DataFrame to data_loader.py
     return raw_data

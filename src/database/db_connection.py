@@ -6,8 +6,10 @@ from sqlalchemy import create_engine
 
 # Import os module for reading environment variables
 import os
+
 # Import sessionmaker utility for creating database sessions
-from sqlalchemy.orm import sessionmaker 
+from sqlalchemy.orm import sessionmaker
+
 # Load all variables from .env into memory
 from sqlalchemy.orm import declarative_base
 import psycopg2
@@ -28,22 +30,18 @@ database_url = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_na
 
 # Create SQLAlchemy engine object
 # Engine manages communication between Python and PostgreSQL
-engine = create_engine(
-    database_url
-)
+engine = create_engine(database_url)
 Base = declarative_base()
 # Create session factory connected to the SQLAlchemy engine
 # Every API request can create its own database session from this
-SessionLocal=sessionmaker(
+SessionLocal = sessionmaker(
     # Bind all sessions to the PostgreSQL engine
     bind=engine
 )
 
 
-
 def get_db():
 
-        
     db = SessionLocal()
 
     try:
@@ -53,16 +51,11 @@ def get_db():
 
         db.close()
 
+
 # Direct PostgreSQL connection
 def get_db_connection():
     conn = psycopg2.connect(
-        host=db_host,
-        port=db_port,
-        database=db_name,
-        user=db_user,
-        password=db_password
+        host=db_host, port=db_port, database=db_name, user=db_user, password=db_password
     )
 
-    return conn        
-
-
+    return conn
