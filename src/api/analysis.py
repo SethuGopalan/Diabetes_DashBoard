@@ -437,14 +437,14 @@ def analysis_endpoint(analysis_type: str):
             # ------------------------------------------------
 
             result = [
-                    {
-                        "risk_count": row[0],
-                        "total_patients": row[1],
-                        "diabetic_patients": row[2],
-                        "diabetes_percentage": float(row[3]),
-                    }
-                    for row in rows
-                ]
+                {
+                    "risk_count": row[0],
+                    "total_patients": row[1],
+                    "diabetic_patients": row[2],
+                    "diabetes_percentage": float(row[3]),
+                }
+                for row in rows
+            ]
 
             # ------------------------------------------------
             # PART 21: RETURN PREGNANCY ANALYSIS RESPONSE
@@ -461,7 +461,7 @@ def analysis_endpoint(analysis_type: str):
 
         else:
 
-             return {"message": f"Unknown analysis type: {analysis_type}"}
+            return {"message": f"Unknown analysis type: {analysis_type}"}
 
     # ========================================================
     # PART 24: CLOSE DATABASE CONNECTION
