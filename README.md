@@ -9,7 +9,7 @@ The project goes beyond a traditional dashboard. Data is stored in a MinIO-based
 The long-term goal is to use Ray with multiple NVIDIA Jetson devices to train and compare machine learning models, track experiments through MLflow, select the best-performing model, and expose the final prediction through the dashboard.
 ## Dashboard Preview
 
-![Diabetes Analytics Dashboard](/home/coder/workspace/.dvenv/docs/images/Diabetic-Dashboard.png)
+![Diabetes Analytics Dashboard]((docs/images/Diabetic-Dashboard.png))
 ## 2. Project Architecture
 
 ```text
