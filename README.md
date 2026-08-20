@@ -7,7 +7,9 @@ The Diabetes Dashboard is an end-to-end data science and MLOps project for analy
 The project goes beyond a traditional dashboard. Data is stored in a MinIO-based Terrafox Data Lake, processed through a PySpark data pipeline, written to PostgreSQL, exposed through FastAPI, and visualized using Dash.
 
 The long-term goal is to use Ray with multiple NVIDIA Jetson devices to train and compare machine learning models, track experiments through MLflow, select the best-performing model, and expose the final prediction through the dashboard.
+## Dashboard Preview
 
+![Diabetes Analytics Dashboard](docs/images/diabetes-dashboard.png)
 ## 2. Project Architecture
 
 ```text
